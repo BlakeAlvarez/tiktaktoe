@@ -567,6 +567,7 @@ def humanTurn():
     else:
         print("this works5")   
         randomMove()
+    setBoardScores()
 
 def myTurn():
     while True:
@@ -637,6 +638,64 @@ def neighborCheck(i, j):
         pass
 
 
+#test adding score for O's as well
+    humanCount = 0
+    try:
+        if Board[i-1][j-1] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
+    try:
+        if Board[i-1][j] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
+    try:
+        if Board[i-1][j+1] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
+    try:
+        if Board[i][j-1] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
+    try:
+        if Board[i][j+1] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
+    try:
+        if Board[i+1][j-1] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
+    try:
+        if Board[i+1][j] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
+    try:
+        if Board[i+1][j+1] == 'O' and  i >= 0 and i < 4 and j >= 0 and j < 4:
+            boardScores[i][j]+=1
+        humanCount+=1
+    except IndexError:
+        pass
+
 def setBoardScores():
     for i in range(0,4):
         for j in range(0,4):
@@ -649,17 +708,28 @@ def makeBestMove():
     jCoord = 0
     for i in range(0,4):
         for j in range(0,4):
-            if boardScores[i][j] > highest and Board[i][j] != 'X':
+            if boardScores[i][j] > highest and Board[i][j] != 'X' and Board[i][j] != 'O':
                 highest = boardScores[i][j]
                 iCoord = i
                 jCoord = j
     print("i: ", iCoord, "j: ", jCoord)
     return iCoord, jCoord
 
-def aiMove():
-    i,j = makeBestMove()
-    Board[i][j] = 'X'
-    setBoardScores()
+def aiMove(count):
+    global aiMoveYet
+    if count == 0:
+        aiMoveYet = 1
+        while True:
+            i = randint(0, 3)
+            j = randint(0, 3)
+            if Board[i][j] == ' ':
+                print("The move is: ", i," ",j)
+                Board[i][j] = 'X'
+                break
+    else:
+        i,j = makeBestMove()
+        Board[i][j] = 'X'
+        setBoardScores()
     
 def printBoardScores():
     for j, block in enumerate(boardScores):
@@ -675,6 +745,7 @@ def printBoardScores():
 humanScore = 0
 aiScore = 0
 for j in range(100):
+    aiMoveYet = 0
     Board = [
         [' ',' ',' ',' '],
         [' ',' ',' ',' '],
@@ -696,7 +767,7 @@ for j in range(100):
         printBoard()
         print()
         print()
-        aiMove()
+        aiMove(aiMoveYet)
         if (checkWin() == True):
             break
         printBoard()
@@ -705,6 +776,6 @@ for j in range(100):
 
 
 
-
+printBoard()
 print("FINAL SCORES")
 print("Human Score: ", humanScore, "\nComputer Score: ", aiScore)
